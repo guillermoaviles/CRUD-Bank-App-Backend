@@ -2,6 +2,7 @@ package com.ironhack.crudbankapp.service.impl;
 
 //import com.ironhack.crudbankapp.model.Role;
 import com.ironhack.crudbankapp.model.CheckingAccount;
+import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.model.User;
 //import com.ironhack.crudbankapp.repository.RoleRepository;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
@@ -155,5 +156,15 @@ public class UserService implements UserServiceInterface {
         List<CheckingAccount> updatedCheckingAccounts = user.getCheckingAccounts();
         updatedCheckingAccounts.add(checkingAccount);
         user.setCheckingAccounts(updatedCheckingAccounts);
+    }
+
+    @Override
+    public void addInvestmentAccount(InvestmentAccount investmentAccount, Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User ID #" + userId + " not found");
+        User user = userOptional.get();
+        List<InvestmentAccount> updatedInvestmentAccounts = user.getInvestmentAccounts();
+        updatedInvestmentAccounts.add(investmentAccount);
+        user.setInvestmentAccounts(updatedInvestmentAccounts);
     }
 }
