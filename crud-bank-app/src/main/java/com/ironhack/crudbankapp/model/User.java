@@ -8,6 +8,7 @@ import org.springframework.data.repository.cdi.Eager;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import static jakarta.persistence.FetchType.EAGER;
 
@@ -46,7 +47,14 @@ public class User {
     /**
      * The roles that the user has
      */
-    @ManyToMany(fetch = EAGER)
-    private Collection<Role> roles = new ArrayList<>();
+//    @ManyToMany(fetch = EAGER)
+//    private Collection<Role> roles = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<CheckingAccount> checkingAccounts;
+//    private List<SavingsAccount> savingsAccounts;
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<InvestmentAccount> investmentAccounts;
 }

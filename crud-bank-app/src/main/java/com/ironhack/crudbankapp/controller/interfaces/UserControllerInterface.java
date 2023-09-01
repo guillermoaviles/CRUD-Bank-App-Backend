@@ -18,5 +18,5 @@ public interface UserControllerInterface {
      * @param user the user to be saved
      * @return the saved user
      */
-    User saveUser(User user);
+    void saveUser(User user);
 }
