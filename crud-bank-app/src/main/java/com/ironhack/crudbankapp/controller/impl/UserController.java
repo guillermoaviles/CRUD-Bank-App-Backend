@@ -3,9 +3,11 @@ package com.ironhack.crudbankapp.controller.impl;
 import com.ironhack.crudbankapp.controller.interfaces.ICheckingAccountController;
 import com.ironhack.crudbankapp.dtos.AmountDTO;
 import com.ironhack.crudbankapp.model.CheckingAccount;
+import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.model.User;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
 import com.ironhack.crudbankapp.service.impl.CheckingAccountService;
+import com.ironhack.crudbankapp.service.impl.InvestmentAccountService;
 import com.ironhack.crudbankapp.service.interfaces.UserServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,9 @@ public class UserController {
     @Autowired
     private CheckingAccountService checkingAccountService;
 
+    @Autowired
+    private InvestmentAccountService investmentAccountService;
+
     /**
      * Get a list of all users
      *
@@ -41,7 +46,6 @@ public class UserController {
     public List<User> getUsers() {
         return userService.getUsers();
     }
-
     /**
      * Save a new user
      *
@@ -59,10 +63,23 @@ public class UserController {
         userService.addCheckingAccount(checkingAccount, userId);
     }
 
+    @PostMapping("/users/addInvestmentAccount/{userId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addInvestmentAccount(@RequestBody @Valid InvestmentAccount investmentAccount, @PathVariable Long userId) {
+        userService.addInvestmentAccount(investmentAccount, userId);
+    }
+
     @PatchMapping("/users/transfer/{fromId}/{destinationId}/{amount}")
     @ResponseStatus(HttpStatus.CREATED)
     public void sendMoney(@PathVariable Integer fromId, @PathVariable Integer destinationId, @PathVariable BigDecimal amount) {
         AmountDTO amountDTO = new AmountDTO(amount);
         checkingAccountService.transfer(fromId, destinationId, amountDTO.getAmount());
+    }
+
+    @PatchMapping("/users/withdraw/{accountNumber}/{amount}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void withdraw(@PathVariable Integer accountNumber, @PathVariable BigDecimal amount) {
+        AmountDTO amountDTO = new AmountDTO(amount);
+        investmentAccountService.withdraw(accountNumber, amountDTO.getAmount());
     }
 }

@@ -2,6 +2,7 @@ package com.ironhack.crudbankapp.service.interfaces;
 
 //import com.ironhack.crudbankapp.model.Role;
 import com.ironhack.crudbankapp.model.CheckingAccount;
+import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.model.User;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public interface UserServiceInterface {
      */
     List<User> getUsers();
 
-    void addCheckingAccount(CheckingAccount checkingAccount, Integer userId);
-
     void addCheckingAccount(CheckingAccount checkingAccount, Long userId);
+
+    void addInvestmentAccount(InvestmentAccount investmentAccount, Long userId);
 }
