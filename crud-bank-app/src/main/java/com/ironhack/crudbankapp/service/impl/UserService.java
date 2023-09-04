@@ -156,6 +156,7 @@ public class UserService implements UserServiceInterface {
         List<CheckingAccount> updatedCheckingAccounts = user.getCheckingAccounts();
         updatedCheckingAccounts.add(checkingAccount);
         user.setCheckingAccounts(updatedCheckingAccounts);
+        userRepository.save(user);
     }
 
     @Override
@@ -166,5 +167,6 @@ public class UserService implements UserServiceInterface {
         List<InvestmentAccount> updatedInvestmentAccounts = user.getInvestmentAccounts();
         updatedInvestmentAccounts.add(investmentAccount);
         user.setInvestmentAccounts(updatedInvestmentAccounts);
+        userRepository.save(user);
     }
 }

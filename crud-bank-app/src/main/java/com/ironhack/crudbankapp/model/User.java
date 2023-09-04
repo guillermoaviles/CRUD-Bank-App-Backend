@@ -42,7 +42,7 @@ public class User {
     /**
      * The password used to log in
      */
-    private String password;
+//    private String password;
 
     /**
      * The roles that the user has
