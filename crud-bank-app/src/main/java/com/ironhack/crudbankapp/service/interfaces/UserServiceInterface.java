@@ -51,4 +51,6 @@ public interface UserServiceInterface {
     void addCheckingAccount(CheckingAccount checkingAccount, Long userId);
 
     void addInvestmentAccount(InvestmentAccount investmentAccount, Long userId);
+
+    User getUserById(Long userId);
 }

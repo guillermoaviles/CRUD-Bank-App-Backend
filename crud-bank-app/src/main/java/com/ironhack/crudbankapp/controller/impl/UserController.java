@@ -6,6 +6,7 @@ import com.ironhack.crudbankapp.model.CheckingAccount;
 import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.model.User;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
+import com.ironhack.crudbankapp.repository.UserRepository;
 import com.ironhack.crudbankapp.service.impl.CheckingAccountService;
 import com.ironhack.crudbankapp.service.impl.InvestmentAccountService;
 import com.ironhack.crudbankapp.service.interfaces.UserServiceInterface;
@@ -13,9 +14,11 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +29,9 @@ public class UserController {
      */
     @Autowired
     private UserServiceInterface userService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private CheckingAccountRepository checkingAccountRepository;
@@ -51,6 +57,13 @@ public class UserController {
      *
      * @param user the user to be saved
      */
+
+    @GetMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.OK)
+    public User getUserById(@PathVariable Long userId) {
+        return userService.getUserById(userId);
+    }
+
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     public void saveUser(@RequestBody User user) {

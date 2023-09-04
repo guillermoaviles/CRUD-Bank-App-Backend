@@ -169,4 +169,11 @@ public class UserService implements UserServiceInterface {
         user.setInvestmentAccounts(updatedInvestmentAccounts);
         userRepository.save(user);
     }
+
+    @Override
+    public User getUserById(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (userOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User #" + userId + " not found");
+        return userOptional.get();
+    }
 }
