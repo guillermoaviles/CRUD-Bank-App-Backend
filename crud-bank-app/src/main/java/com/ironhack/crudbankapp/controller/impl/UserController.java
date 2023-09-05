@@ -82,8 +82,8 @@ public class UserController {
         userService.addInvestmentAccount(investmentAccount, userId);
     }
 
-    @PatchMapping("/users/transfer/{fromId}/{destinationId}/{amount}")
-    @ResponseStatus(HttpStatus.CREATED)
+    @PatchMapping("/users/sendMoney/{fromId}/{destinationId}/{amount}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void sendMoney(@PathVariable Integer fromId, @PathVariable Integer destinationId, @PathVariable BigDecimal amount) {
         AmountDTO amountDTO = new AmountDTO(amount);
         checkingAccountService.transfer(fromId, destinationId, amountDTO.getAmount());
