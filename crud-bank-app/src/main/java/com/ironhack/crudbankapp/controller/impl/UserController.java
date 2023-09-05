@@ -1,24 +1,23 @@
 package com.ironhack.crudbankapp.controller.impl;
 
-import com.ironhack.crudbankapp.controller.interfaces.ICheckingAccountController;
 import com.ironhack.crudbankapp.dtos.AmountDTO;
 import com.ironhack.crudbankapp.model.CheckingAccount;
 import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.model.User;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
+import com.ironhack.crudbankapp.repository.TransactionRepository;
 import com.ironhack.crudbankapp.repository.UserRepository;
 import com.ironhack.crudbankapp.service.impl.CheckingAccountService;
 import com.ironhack.crudbankapp.service.impl.InvestmentAccountService;
+import com.ironhack.crudbankapp.service.interfaces.ITransactionService;
 import com.ironhack.crudbankapp.service.interfaces.UserServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -32,6 +31,11 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private TransactionRepository transactionRepository;
+
+    @Autowired
+    private ITransactionService transactionService;
 
     @Autowired
     private CheckingAccountRepository checkingAccountRepository;
@@ -70,6 +74,8 @@ public class UserController {
         userService.saveUser(user);
     }
 
+
+
     @PostMapping("/users/addCheckingAccount/{userId}")
     @ResponseStatus(HttpStatus.CREATED)
     public void addCheckingAccount(@RequestBody @Valid CheckingAccount checkingAccount, @PathVariable Long userId) {
@@ -87,6 +93,7 @@ public class UserController {
     public void sendMoney(@PathVariable Integer fromId, @PathVariable Integer destinationId, @PathVariable BigDecimal amount) {
         AmountDTO amountDTO = new AmountDTO(amount);
         checkingAccountService.transfer(fromId, destinationId, amountDTO.getAmount());
+        transactionService.generateTransaction();
     }
 
     @PatchMapping("/users/withdraw/{accountNumber}/{amount}")

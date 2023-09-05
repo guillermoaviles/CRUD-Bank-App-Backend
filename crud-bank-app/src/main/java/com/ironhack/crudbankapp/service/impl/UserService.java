@@ -148,6 +148,7 @@ public class UserService implements UserServiceInterface {
         return userRepository.findAll();
     }
 
+
     @Override
     public void addCheckingAccount(CheckingAccount checkingAccount, Long userId) {
         Optional<User> userOptional = userRepository.findById(userId);
