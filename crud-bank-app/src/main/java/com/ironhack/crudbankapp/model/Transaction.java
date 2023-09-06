@@ -16,7 +16,7 @@ public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer transactionId;
+    private Integer id;
 
     private LocalDate transactionDate;
 
@@ -24,10 +24,21 @@ public class Transaction {
 
     private BigDecimal amount;
 
-    private Integer fromId;
+    private String owner;
 
-    private Integer destinationId;
+    private Long ownerId;
 
-    public Transaction(LocalDate transactionDate, BigDecimal accountTotal, BigDecimal amount, Integer fromId, Integer destinationId) {
+    private Integer accountId;
+
+    public Transaction(LocalDate transactionDate, BigDecimal accountTotal, BigDecimal amount, String owner, Long ownerId, Integer accountId) {
+        setTransactionDate(transactionDate);
+        setAccountTotal(accountTotal);
+        setAmount(amount);
+        setOwner(owner);
+        setOwnerId(ownerId);
+        setAccountId(accountId);
+    }
+
+    public Transaction(LocalDate transactionDate, BigDecimal accountTotal, BigDecimal amount, Long fromOwnerId, Long toOwnerId, Integer fromId, Integer destinationId) {
     }
 }

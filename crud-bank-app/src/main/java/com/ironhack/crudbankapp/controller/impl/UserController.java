@@ -93,7 +93,7 @@ public class UserController {
     public void sendMoney(@PathVariable Integer fromId, @PathVariable Integer destinationId, @PathVariable BigDecimal amount) {
         AmountDTO amountDTO = new AmountDTO(amount);
         checkingAccountService.transfer(fromId, destinationId, amountDTO.getAmount());
-        transactionService.generateTransaction();
+//        transactionService.generateTransactionTicket(checkingAccountRepository.getCheckingAccountById(fromId).getBalance(), amount, fromId, destinationId);
     }
 
     @PatchMapping("/users/withdraw/{accountNumber}/{amount}")

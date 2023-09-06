@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface InvestmentAccountRepository extends JpaRepository<InvestmentAccount, Integer> {
     InvestmentAccount findInvestmentAccountByOwner(String owner);
+    InvestmentAccount findInvestmentAccountByAccountNumber(Integer id);
 }

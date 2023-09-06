@@ -6,7 +6,9 @@ import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
 import com.ironhack.crudbankapp.repository.DepositRepository;
 import com.ironhack.crudbankapp.repository.InvestmentAccountRepository;
+import com.ironhack.crudbankapp.repository.UserRepository;
 import com.ironhack.crudbankapp.service.interfaces.ICheckingAccountService;
+import com.ironhack.crudbankapp.service.interfaces.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -28,6 +30,12 @@ public class CheckingAccountService implements ICheckingAccountService {
 
     @Autowired
     DepositRepository depositRepository;
+
+    @Autowired
+    ITransactionService transactionService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public CheckingAccount getCheckingAccountByAccountNumber(Integer accountNumber) {
@@ -62,8 +70,24 @@ public class CheckingAccountService implements ICheckingAccountService {
             // Credit funds to destination checking account
             destinationCheckingAccountOptional.get().setBalance(destinationCheckingAccountOptional.get().getBalance().add(amount));
 
-            checkingAccountRepository.save(destinationCheckingAccountOptional.get());
             checkingAccountRepository.save(fromCheckingAccount);
+            transactionService.generateTransactionTicket(
+                    getCheckingAccountByAccountNumber(fromId).getBalance(),
+                    amount.multiply(BigDecimal.valueOf(-1)),
+                    getCheckingAccountByAccountNumber(fromId).getOwner(),
+                    userRepository.findByName(getCheckingAccountByAccountNumber(fromId).getOwner()).getId(),
+                    fromId
+            );
+
+            checkingAccountRepository.save(destinationCheckingAccountOptional.get());
+            transactionService.generateTransactionTicket(
+                    getCheckingAccountByAccountNumber(destinationId).getBalance(),
+                    amount,
+                    getCheckingAccountByAccountNumber(destinationId).getOwner(),
+                    userRepository.findByName(getCheckingAccountByAccountNumber(destinationId).getOwner()).getId(),
+                    destinationId
+            );
+
         } else if (destinationInvestmentAccountOptional.isPresent()) {
 
             // Debit funds from origin checking account
@@ -71,8 +95,24 @@ public class CheckingAccountService implements ICheckingAccountService {
             // Credit funds to destination checking account
             deposit(amount, destinationInvestmentAccountOptional.get());
 
-            investmentAccountRepository.save(destinationInvestmentAccountOptional.get());
             checkingAccountRepository.save(fromCheckingAccount);
+            transactionService.generateTransactionTicket(
+                    getCheckingAccountByAccountNumber(fromId).getBalance(),
+                    amount.multiply(BigDecimal.valueOf(-1)),
+                    getCheckingAccountByAccountNumber(fromId).getOwner(),
+                    userRepository.findByName(getCheckingAccountByAccountNumber(fromId).getOwner()).getId(),
+                    fromId
+            );
+
+            investmentAccountRepository.save(destinationInvestmentAccountOptional.get());
+            transactionService.generateTransactionTicket(
+                    investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getBalance(),
+                    amount,
+                    investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getOwner(),
+                    userRepository.findByName(investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getOwner()).getId(),
+                    destinationId
+            );
+
         } else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account #" + destinationId + " not found");
     }
 

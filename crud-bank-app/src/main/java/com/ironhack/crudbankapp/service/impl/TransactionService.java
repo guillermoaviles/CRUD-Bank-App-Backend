@@ -5,19 +5,21 @@ import com.ironhack.crudbankapp.model.Transaction;
 import com.ironhack.crudbankapp.repository.TransactionRepository;
 import com.ironhack.crudbankapp.service.interfaces.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+@Service
 public class TransactionService implements ITransactionService {
 
     @Autowired
     TransactionRepository transactionRepository;
 
-    public void generateTransaction(BigDecimal accountTotal, BigDecimal amount, Integer fromId, Integer destinationId) {
+    public void generateTransactionTicket(BigDecimal accountTotal, BigDecimal amount, String owner, Long ownerId, Integer accountId) {
         AmountDTO amountDTO = new AmountDTO(amount);
         LocalDate transactionDate = LocalDate.now();
-        Transaction newTransaction = new Transaction(transactionDate, accountTotal, amountDTO.getAmount(), fromId, destinationId);
+        Transaction newTransaction = new Transaction(transactionDate, accountTotal, amountDTO.getAmount(), owner, ownerId, accountId);
         transactionRepository.save(newTransaction);
     }
 }

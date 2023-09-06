@@ -3,5 +3,5 @@ package com.ironhack.crudbankapp.service.interfaces;
 import java.math.BigDecimal;
 
 public interface ITransactionService {
-    public void generateTransaction(BigDecimal accountTotal, BigDecimal amount, Integer fromId, Integer destinationId);
+    public void generateTransactionTicket(BigDecimal accountTotal, BigDecimal amount, String owner, Long ownerId, Integer accountId);
 }

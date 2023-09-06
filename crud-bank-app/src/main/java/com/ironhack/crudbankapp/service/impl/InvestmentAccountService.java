@@ -4,7 +4,9 @@ import com.ironhack.crudbankapp.model.CheckingAccount;
 import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
 import com.ironhack.crudbankapp.repository.InvestmentAccountRepository;
+import com.ironhack.crudbankapp.repository.UserRepository;
 import com.ironhack.crudbankapp.service.interfaces.IInvestmentAccountService;
+import com.ironhack.crudbankapp.service.interfaces.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,12 @@ public class InvestmentAccountService implements IInvestmentAccountService {
 
     @Autowired
     CheckingAccountRepository checkingAccountRepository;
+
+    @Autowired
+    ITransactionService transactionService;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Override
     public InvestmentAccount getInvestmentAccountByAccountNumber(Integer accountNumber) {
@@ -46,8 +54,24 @@ public class InvestmentAccountService implements IInvestmentAccountService {
 
         investmentAccountOptional.get().withdraw(amount);
         checkingAccountOptional.get().setBalance(checkingAccountOptional.get().getBalance().add(amount));
+
         investmentAccountRepository.save(investmentAccountOptional.get());
+        transactionService.generateTransactionTicket(
+                investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getBalance(),
+                amount.multiply(BigDecimal.valueOf(-1)),
+                investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner(),
+                userRepository.findByName(investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner()).getId(),
+                accountNumber
+        );
+
         checkingAccountRepository.save(checkingAccountOptional.get());
+        transactionService.generateTransactionTicket(
+                checkingAccountRepository.findCheckingAccountByAccountNumber(checkingAccountOptional.get().getAccountNumber()).getBalance(),
+                amount,
+                checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner(),
+                userRepository.findByName(checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner()).getId(),
+                checkingAccountOptional.get().getAccountNumber()
+        );
     }
 
     @Override
