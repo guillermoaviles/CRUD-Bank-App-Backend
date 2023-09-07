@@ -26,19 +26,19 @@ public class Transaction {
 
     private String owner;
 
+    private String counterparty;
+
     private Long ownerId;
 
     private Integer accountId;
 
-    public Transaction(LocalDate transactionDate, BigDecimal accountTotal, BigDecimal amount, String owner, Long ownerId, Integer accountId) {
+    public Transaction(LocalDate transactionDate, BigDecimal accountTotal, BigDecimal amount, String owner, String counterparty, Long ownerId, Integer accountId) {
         setTransactionDate(transactionDate);
         setAccountTotal(accountTotal);
         setAmount(amount);
         setOwner(owner);
+        setCounterparty(counterparty);
         setOwnerId(ownerId);
         setAccountId(accountId);
-    }
-
-    public Transaction(LocalDate transactionDate, BigDecimal accountTotal, BigDecimal amount, Long fromOwnerId, Long toOwnerId, Integer fromId, Integer destinationId) {
     }
 }

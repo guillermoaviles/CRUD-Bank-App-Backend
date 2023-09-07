@@ -75,6 +75,7 @@ public class CheckingAccountService implements ICheckingAccountService {
                     getCheckingAccountByAccountNumber(fromId).getBalance(),
                     amount.multiply(BigDecimal.valueOf(-1)),
                     getCheckingAccountByAccountNumber(fromId).getOwner(),
+                    getCheckingAccountByAccountNumber(destinationId).getOwner(),
                     userRepository.findByName(getCheckingAccountByAccountNumber(fromId).getOwner()).getId(),
                     fromId
             );
@@ -84,6 +85,7 @@ public class CheckingAccountService implements ICheckingAccountService {
                     getCheckingAccountByAccountNumber(destinationId).getBalance(),
                     amount,
                     getCheckingAccountByAccountNumber(destinationId).getOwner(),
+                    getCheckingAccountByAccountNumber(fromId).getOwner(),
                     userRepository.findByName(getCheckingAccountByAccountNumber(destinationId).getOwner()).getId(),
                     destinationId
             );
@@ -100,6 +102,7 @@ public class CheckingAccountService implements ICheckingAccountService {
                     getCheckingAccountByAccountNumber(fromId).getBalance(),
                     amount.multiply(BigDecimal.valueOf(-1)),
                     getCheckingAccountByAccountNumber(fromId).getOwner(),
+                    investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getOwner(),
                     userRepository.findByName(getCheckingAccountByAccountNumber(fromId).getOwner()).getId(),
                     fromId
             );
@@ -109,6 +112,7 @@ public class CheckingAccountService implements ICheckingAccountService {
                     investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getBalance(),
                     amount,
                     investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getOwner(),
+                    getCheckingAccountByAccountNumber(fromId).getOwner(),
                     userRepository.findByName(investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getOwner()).getId(),
                     destinationId
             );

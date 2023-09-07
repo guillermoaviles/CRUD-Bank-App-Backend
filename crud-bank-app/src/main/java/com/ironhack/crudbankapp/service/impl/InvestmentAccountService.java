@@ -60,6 +60,7 @@ public class InvestmentAccountService implements IInvestmentAccountService {
                 investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getBalance(),
                 amount.multiply(BigDecimal.valueOf(-1)),
                 investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner(),
+                checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner(),
                 userRepository.findByName(investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner()).getId(),
                 accountNumber
         );
@@ -69,6 +70,7 @@ public class InvestmentAccountService implements IInvestmentAccountService {
                 checkingAccountRepository.findCheckingAccountByAccountNumber(checkingAccountOptional.get().getAccountNumber()).getBalance(),
                 amount,
                 checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner(),
+                investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner(),
                 userRepository.findByName(checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner()).getId(),
                 checkingAccountOptional.get().getAccountNumber()
         );
@@ -77,6 +79,11 @@ public class InvestmentAccountService implements IInvestmentAccountService {
     @Override
     public BigDecimal calculateAvailableBalance(Integer accountNumber) {
         return investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).calculateAvailableBalance();
+    }
+
+    @Override
+    public BigDecimal calculateTotalBalanceWithYield(Integer accountNumber) {
+        return investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).calculateTotalBalanceWithYield();
     }
 
     @Override

@@ -15,4 +15,6 @@ public interface IInvestmentAccountService {
     void withdraw(Integer accountNumber, BigDecimal amount);
 
     BigDecimal calculateAvailableBalance(Integer accountNumber);
+
+    BigDecimal calculateTotalBalanceWithYield(Integer accountNumber);
 }

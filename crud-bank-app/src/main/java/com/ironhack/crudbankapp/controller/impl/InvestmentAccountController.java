@@ -45,6 +45,11 @@ public class InvestmentAccountController implements IInvestmentAccountController
         return investmentAccountService.calculateAvailableBalance(accountNumber);
     }
 
+    @GetMapping("/accounts/investment/totalBalanceWithYield/{accountNumber}")
+    public BigDecimal calculateTotalBalanceWithYield(@PathVariable Integer accountNumber) {
+        return investmentAccountService.calculateTotalBalanceWithYield(accountNumber);
+    }
+
     // **************************************************  POST  ******************************************************
 
     @PostMapping("/accounts/investment")

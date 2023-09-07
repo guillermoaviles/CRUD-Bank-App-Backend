@@ -36,10 +36,10 @@ public class TransactionController implements ITransactionController {
         return transactionRepository.findByAccountIdOrderByTransactionDate(account);
     }
 
-    public void generateTransactionTicket(BigDecimal accountTotal, BigDecimal amount, String owner, Long ownerId, Integer accountId) {
+    public void generateTransactionTicket(BigDecimal accountTotal, BigDecimal amount, String owner, String counterparty, Long ownerId, Integer accountId) {
         AmountDTO amountDTO = new AmountDTO(amount);
         LocalDate transactionDate = LocalDate.now();
-        Transaction newTransaction = new Transaction(transactionDate, accountTotal, amountDTO.getAmount(), owner, ownerId, accountId);
+        Transaction newTransaction = new Transaction(transactionDate, accountTotal, amountDTO.getAmount(), owner, counterparty, ownerId, accountId);
         transactionRepository.save(newTransaction);
     }
 }

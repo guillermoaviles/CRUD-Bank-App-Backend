@@ -56,8 +56,6 @@ public class InvestmentAccount extends Account{
         BigDecimal availableBalance = calculateAvailableBalance();
 
         if (amount.compareTo(availableBalance) <= 0) {
-            setBalance(getBalance().subtract(amount));
-            // Logic to liquidate deposits
             liquidateDeposits(amount);
         } else {
             throw new IllegalArgumentException("Insufficient funds");
@@ -77,6 +75,17 @@ public class InvestmentAccount extends Account{
         return availableBalance;
     }
 
+    public BigDecimal calculateTotalBalanceWithYield() {
+        BigDecimal availableBalance = BigDecimal.valueOf(0);
+
+        for (Deposit deposit : deposits) {
+            BigDecimal depositAmountWithInterest = calculateAmountWithInterest(deposit);
+            availableBalance = availableBalance.add(depositAmountWithInterest);
+        }
+        return availableBalance;
+    }
+
+    // Logic to liquidate deposits
     private void liquidateDeposits(BigDecimal withdrawalAmount) {
         LocalDate currentDate = LocalDate.now();
 
@@ -86,11 +95,11 @@ public class InvestmentAccount extends Account{
                 BigDecimal depositAmount = calculateAmountWithInterest(deposit);
                 if (withdrawalAmount.compareTo(depositAmount) >= 0) {
                     withdrawalAmount = withdrawalAmount.subtract(depositAmount);
-                    setBalance(getBalance().subtract(depositAmount));
+//                    setBalance(getBalance().subtract(depositAmount));
                     depositsToDelete.add(deposit);
                 } else if (withdrawalAmount.compareTo(depositAmount) < 0) {
                     deposit.setAmount(depositAmount.subtract(withdrawalAmount));
-                    setBalance(deposit.getAmount());
+//                    setBalance(getBalance().subtract(withdrawalAmount));
                     withdrawalAmount = BigDecimal.valueOf(0);
                 }
             }
@@ -98,6 +107,7 @@ public class InvestmentAccount extends Account{
         for (Deposit deposit : depositsToDelete) {
             deposits.remove(deposit);
         }
+        setBalance(calculateTotalBalanceWithYield());
     }
 
     private BigDecimal calculateAmountWithInterest(Deposit deposit) {
