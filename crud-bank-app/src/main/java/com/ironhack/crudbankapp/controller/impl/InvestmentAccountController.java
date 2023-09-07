@@ -40,6 +40,11 @@ public class InvestmentAccountController implements IInvestmentAccountController
         return investmentAccountRepository.findInvestmentAccountByOwner(owner);
     }
 
+    @GetMapping("/accounts/investment/availableBalance/{accountNumber}")
+    public BigDecimal calculateAvailableBalance(@PathVariable Integer accountNumber) {
+        return investmentAccountService.calculateAvailableBalance(accountNumber);
+    }
+
     // **************************************************  POST  ******************************************************
 
     @PostMapping("/accounts/investment")

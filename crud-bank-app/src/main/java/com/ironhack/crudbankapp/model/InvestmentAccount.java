@@ -64,7 +64,7 @@ public class InvestmentAccount extends Account{
         }
     }
 
-    private BigDecimal calculateAvailableBalance() {
+    public BigDecimal calculateAvailableBalance() {
         LocalDate currentDate = LocalDate.now();
         BigDecimal availableBalance = BigDecimal.valueOf(0);
 

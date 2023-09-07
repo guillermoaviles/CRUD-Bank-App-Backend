@@ -75,6 +75,11 @@ public class InvestmentAccountService implements IInvestmentAccountService {
     }
 
     @Override
+    public BigDecimal calculateAvailableBalance(Integer accountNumber) {
+        return investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).calculateAvailableBalance();
+    }
+
+    @Override
     public void deleteInvestmentAccount(Integer accountNumber) {
         Optional<InvestmentAccount> investmentAccountOptional = investmentAccountRepository.findById(accountNumber);
         if (investmentAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account #" + accountNumber + " not found");

@@ -14,6 +14,7 @@ public interface IInvestmentAccountController {
     InvestmentAccount getInvestmentAccountByOwner(@PathVariable String owner);
     void saveAccount(@RequestBody @Valid InvestmentAccount investmentAccount);
     void updateAccount(@RequestBody @Valid InvestmentAccount investmentAccount, @PathVariable Integer accountNumber);
+    BigDecimal calculateAvailableBalance(@PathVariable Integer accountNumber);
     void withdraw(@PathVariable Integer accountNumber, @PathVariable BigDecimal amount);
     void deleteAccount(@PathVariable Integer accountNumber);
 }

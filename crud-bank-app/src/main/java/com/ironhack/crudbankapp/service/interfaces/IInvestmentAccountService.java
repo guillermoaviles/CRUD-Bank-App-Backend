@@ -13,4 +13,6 @@ public interface IInvestmentAccountService {
     void deleteInvestmentAccount(Integer accountNumber);
 
     void withdraw(Integer accountNumber, BigDecimal amount);
+
+    BigDecimal calculateAvailableBalance(Integer accountNumber);
 }
