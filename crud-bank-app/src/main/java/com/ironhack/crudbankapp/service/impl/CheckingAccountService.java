@@ -4,10 +4,8 @@ import com.ironhack.crudbankapp.client.TransactionDataService;
 import com.ironhack.crudbankapp.model.CheckingAccount;
 import com.ironhack.crudbankapp.model.Deposit;
 import com.ironhack.crudbankapp.model.InvestmentAccount;
-import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
-import com.ironhack.crudbankapp.repository.DepositRepository;
-import com.ironhack.crudbankapp.repository.InvestmentAccountRepository;
-import com.ironhack.crudbankapp.repository.UserRepository;
+import com.ironhack.crudbankapp.model.SavingsAccount;
+import com.ironhack.crudbankapp.repository.*;
 import com.ironhack.crudbankapp.service.interfaces.ICheckingAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,8 +29,8 @@ public class CheckingAccountService implements ICheckingAccountService {
     @Autowired
     DepositRepository depositRepository;
 
-//    @Autowired
-//    ITransactionService transactionService;
+    @Autowired
+    SavingsAccountRepository savingsAccountRepository;
 
     @Autowired
     TransactionDataService transactionDataService;
@@ -65,6 +63,7 @@ public class CheckingAccountService implements ICheckingAccountService {
         }
 
         Optional<CheckingAccount> destinationCheckingAccountOptional = checkingAccountRepository.findById(destinationId);
+        Optional<SavingsAccount> destinationSavingsAccountOptional = savingsAccountRepository.findById(destinationId);
         Optional<InvestmentAccount> destinationInvestmentAccountOptional = investmentAccountRepository.findById(destinationId);
         if (destinationCheckingAccountOptional.isPresent()) {
 
@@ -117,6 +116,33 @@ public class CheckingAccountService implements ICheckingAccountService {
                     investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getOwner(),
                     getCheckingAccountByAccountNumber(fromId).getOwner(),
                     userRepository.findByName(investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getOwner()).getId(),
+                    destinationId
+            );
+
+        } else if (destinationSavingsAccountOptional.isPresent()) {
+
+            // Debit funds from origin checking account
+            fromCheckingAccount.setBalance(fromCheckingAccount.getBalance().subtract(amount));
+            // Credit funds to destination checking account
+            destinationSavingsAccountOptional.get().setBalance(destinationSavingsAccountOptional.get().getBalance().add(amount));
+
+            checkingAccountRepository.save(fromCheckingAccount);
+            transactionDataService.generateTransactionTicket(
+                    getCheckingAccountByAccountNumber(fromId).getBalance(),
+                    amount.multiply(BigDecimal.valueOf(-1)),
+                    getCheckingAccountByAccountNumber(fromId).getOwner(),
+                    savingsAccountRepository.findSavingsAccountByAccountNumber(destinationId).getOwner(),
+                    userRepository.findByName(getCheckingAccountByAccountNumber(fromId).getOwner()).getId(),
+                    fromId
+            );
+
+            savingsAccountRepository.save(destinationSavingsAccountOptional.get());
+            transactionDataService.generateTransactionTicket(
+                    savingsAccountRepository.findSavingsAccountByAccountNumber(destinationId).getBalance(),
+                    amount,
+                    savingsAccountRepository.findSavingsAccountByAccountNumber(destinationId).getOwner(),
+                    getCheckingAccountByAccountNumber(fromId).getOwner(),
+                    userRepository.findByName(savingsAccountRepository.findSavingsAccountByAccountNumber(destinationId).getOwner()).getId(),
                     destinationId
             );
 

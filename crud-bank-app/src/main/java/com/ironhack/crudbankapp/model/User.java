@@ -53,7 +53,11 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<CheckingAccount> checkingAccounts;
-//    private List<SavingsAccount> savingsAccounts;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private List<SavingsAccount> savingsAccounts;
+
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private List<InvestmentAccount> investmentAccounts;

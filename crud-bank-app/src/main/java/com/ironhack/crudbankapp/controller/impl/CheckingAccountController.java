@@ -36,7 +36,7 @@ public class CheckingAccountController implements ICheckingAccountController {
         return checkingAccountService.getCheckingAccountByAccountNumber(accountNumber);
     }
 
-    @GetMapping("/accounts/checking/owner/{name}")
+    @GetMapping("/accounts/checking/owner/{owner}")
     public CheckingAccount getCheckingAccountByOwner(@PathVariable String owner) {
         return checkingAccountRepository.findCheckingAccountByOwner(owner);
     }
