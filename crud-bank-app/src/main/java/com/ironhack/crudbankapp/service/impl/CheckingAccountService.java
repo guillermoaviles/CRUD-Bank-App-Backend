@@ -1,5 +1,6 @@
 package com.ironhack.crudbankapp.service.impl;
 
+import com.ironhack.crudbankapp.client.TransactionDataService;
 import com.ironhack.crudbankapp.model.CheckingAccount;
 import com.ironhack.crudbankapp.model.Deposit;
 import com.ironhack.crudbankapp.model.InvestmentAccount;
@@ -8,7 +9,6 @@ import com.ironhack.crudbankapp.repository.DepositRepository;
 import com.ironhack.crudbankapp.repository.InvestmentAccountRepository;
 import com.ironhack.crudbankapp.repository.UserRepository;
 import com.ironhack.crudbankapp.service.interfaces.ICheckingAccountService;
-import com.ironhack.crudbankapp.service.interfaces.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,8 +31,11 @@ public class CheckingAccountService implements ICheckingAccountService {
     @Autowired
     DepositRepository depositRepository;
 
+//    @Autowired
+//    ITransactionService transactionService;
+
     @Autowired
-    ITransactionService transactionService;
+    TransactionDataService transactionDataService;
 
     @Autowired
     UserRepository userRepository;
@@ -71,7 +74,7 @@ public class CheckingAccountService implements ICheckingAccountService {
             destinationCheckingAccountOptional.get().setBalance(destinationCheckingAccountOptional.get().getBalance().add(amount));
 
             checkingAccountRepository.save(fromCheckingAccount);
-            transactionService.generateTransactionTicket(
+            transactionDataService.generateTransactionTicket(
                     getCheckingAccountByAccountNumber(fromId).getBalance(),
                     amount.multiply(BigDecimal.valueOf(-1)),
                     getCheckingAccountByAccountNumber(fromId).getOwner(),
@@ -81,7 +84,7 @@ public class CheckingAccountService implements ICheckingAccountService {
             );
 
             checkingAccountRepository.save(destinationCheckingAccountOptional.get());
-            transactionService.generateTransactionTicket(
+            transactionDataService.generateTransactionTicket(
                     getCheckingAccountByAccountNumber(destinationId).getBalance(),
                     amount,
                     getCheckingAccountByAccountNumber(destinationId).getOwner(),
@@ -98,7 +101,7 @@ public class CheckingAccountService implements ICheckingAccountService {
             deposit(amount, destinationInvestmentAccountOptional.get());
 
             checkingAccountRepository.save(fromCheckingAccount);
-            transactionService.generateTransactionTicket(
+            transactionDataService.generateTransactionTicket(
                     getCheckingAccountByAccountNumber(fromId).getBalance(),
                     amount.multiply(BigDecimal.valueOf(-1)),
                     getCheckingAccountByAccountNumber(fromId).getOwner(),
@@ -108,7 +111,7 @@ public class CheckingAccountService implements ICheckingAccountService {
             );
 
             investmentAccountRepository.save(destinationInvestmentAccountOptional.get());
-            transactionService.generateTransactionTicket(
+            transactionDataService.generateTransactionTicket(
                     investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getBalance(),
                     amount,
                     investmentAccountRepository.findInvestmentAccountByAccountNumber(destinationId).getOwner(),

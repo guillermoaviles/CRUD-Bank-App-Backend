@@ -1,12 +1,12 @@
 package com.ironhack.crudbankapp.service.impl;
 
+import com.ironhack.crudbankapp.client.TransactionDataService;
 import com.ironhack.crudbankapp.model.CheckingAccount;
 import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
 import com.ironhack.crudbankapp.repository.InvestmentAccountRepository;
 import com.ironhack.crudbankapp.repository.UserRepository;
 import com.ironhack.crudbankapp.service.interfaces.IInvestmentAccountService;
-import com.ironhack.crudbankapp.service.interfaces.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,11 @@ public class InvestmentAccountService implements IInvestmentAccountService {
     @Autowired
     CheckingAccountRepository checkingAccountRepository;
 
+//    @Autowired
+//    ITransactionService transactionService;
+
     @Autowired
-    ITransactionService transactionService;
+    TransactionDataService transactionDataService;
 
     @Autowired
     UserRepository userRepository;
@@ -56,7 +59,7 @@ public class InvestmentAccountService implements IInvestmentAccountService {
         checkingAccountOptional.get().setBalance(checkingAccountOptional.get().getBalance().add(amount));
 
         investmentAccountRepository.save(investmentAccountOptional.get());
-        transactionService.generateTransactionTicket(
+        transactionDataService.generateTransactionTicket(
                 investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getBalance(),
                 amount.multiply(BigDecimal.valueOf(-1)),
                 investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner(),
@@ -66,7 +69,7 @@ public class InvestmentAccountService implements IInvestmentAccountService {
         );
 
         checkingAccountRepository.save(checkingAccountOptional.get());
-        transactionService.generateTransactionTicket(
+        transactionDataService.generateTransactionTicket(
                 checkingAccountRepository.findCheckingAccountByAccountNumber(checkingAccountOptional.get().getAccountNumber()).getBalance(),
                 amount,
                 checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner(),

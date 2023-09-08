@@ -5,7 +5,6 @@ import com.ironhack.crudbankapp.dtos.AmountDTO;
 import com.ironhack.crudbankapp.model.CheckingAccount;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
 import com.ironhack.crudbankapp.service.impl.CheckingAccountService;
-import com.ironhack.crudbankapp.service.impl.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

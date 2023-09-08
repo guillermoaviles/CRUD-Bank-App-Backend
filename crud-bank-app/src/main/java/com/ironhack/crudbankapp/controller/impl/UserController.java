@@ -5,11 +5,9 @@ import com.ironhack.crudbankapp.model.CheckingAccount;
 import com.ironhack.crudbankapp.model.InvestmentAccount;
 import com.ironhack.crudbankapp.model.User;
 import com.ironhack.crudbankapp.repository.CheckingAccountRepository;
-import com.ironhack.crudbankapp.repository.TransactionRepository;
 import com.ironhack.crudbankapp.repository.UserRepository;
 import com.ironhack.crudbankapp.service.impl.CheckingAccountService;
 import com.ironhack.crudbankapp.service.impl.InvestmentAccountService;
-import com.ironhack.crudbankapp.service.interfaces.ITransactionService;
 import com.ironhack.crudbankapp.service.interfaces.UserServiceInterface;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +29,6 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private TransactionRepository transactionRepository;
-
-    @Autowired
-    private ITransactionService transactionService;
 
     @Autowired
     private CheckingAccountRepository checkingAccountRepository;
@@ -59,7 +52,7 @@ public class UserController {
     /**
      * Save a new user
      *
-     * @param user the user to be saved
+     *
      */
 
     @GetMapping("/users/{userId}")
@@ -93,7 +86,6 @@ public class UserController {
     public void sendMoney(@PathVariable Integer fromId, @PathVariable Integer destinationId, @PathVariable BigDecimal amount) {
         AmountDTO amountDTO = new AmountDTO(amount);
         checkingAccountService.transfer(fromId, destinationId, amountDTO.getAmount());
-//        transactionService.generateTransactionTicket(checkingAccountRepository.getCheckingAccountById(fromId).getBalance(), amount, fromId, destinationId);
     }
 
     @PatchMapping("/users/withdraw/{accountNumber}/{amount}")

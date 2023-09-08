@@ -8,14 +8,11 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Transaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private LocalDate transactionDate;
