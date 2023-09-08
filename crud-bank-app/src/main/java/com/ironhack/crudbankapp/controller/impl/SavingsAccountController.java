@@ -53,7 +53,7 @@ public class SavingsAccountController implements ISavingsAccountController {
 
     @PatchMapping("/accounts/savings/withdraw/{accountNumber}/{amount}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void withdraw(Integer accountNumber, BigDecimal amount) {
+    public void withdraw(@PathVariable Integer accountNumber, @PathVariable BigDecimal amount) {
         AmountDTO amountDTO = new AmountDTO(amount);
         savingsAccountService.withdraw(accountNumber, amountDTO.getAmount());
     }
