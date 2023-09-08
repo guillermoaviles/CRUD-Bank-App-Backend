@@ -35,7 +35,9 @@ public class TransactionController implements ITransactionController {
         return transactionRepository.findByAccountIdOrderByTransactionDate(account);
     }
 
-    public void generateTransactionTicket(BigDecimal accountTotal, BigDecimal amount, String owner, String counterparty, Long ownerId, Integer accountId) {
+    @PostMapping("/transactions/generateTicket/{accountTotal}/{amount}/{owner}/{counterparty}/{ownerId}/{accountId}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void generateTransactionTicket(@PathVariable BigDecimal accountTotal, @PathVariable BigDecimal amount, @PathVariable String owner, @PathVariable String counterparty, @PathVariable Long ownerId, @PathVariable Integer accountId) {
         AmountDTO amountDTO = new AmountDTO(amount);
         LocalDate transactionDate = LocalDate.now();
         Transaction newTransaction = new Transaction(transactionDate, accountTotal, amountDTO.getAmount(), owner, counterparty, ownerId, accountId);
