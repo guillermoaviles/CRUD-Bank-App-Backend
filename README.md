@@ -6,7 +6,7 @@ The CRUD Bank App is a banking application that allows users to manage various t
 
 ## Class Diagram
 
-![UML Class Diagram](https://github.com/guillermoaviles/CRUD-Bank-App/assets/33820055/0ba81e7b-22d9-4292-bbd3-7a20a2e831c5)
+![UML Class Diagram](https://github.com/guillermoaviles/CRUD-Bank-App-Backend/assets/33820055/e8fdc371-a25e-4e5c-ae28-add458f355bc)
 
 
 ## Setup
