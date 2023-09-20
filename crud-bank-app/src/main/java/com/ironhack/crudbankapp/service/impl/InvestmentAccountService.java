@@ -52,7 +52,7 @@ public class InvestmentAccountService implements IInvestmentAccountService {
     public void withdraw(Integer accountNumber, BigDecimal amount) {
         Optional<InvestmentAccount> investmentAccountOptional = investmentAccountRepository.findById(accountNumber);
         if (investmentAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account #" + accountNumber + " not found");
-        Optional<CheckingAccount> checkingAccountOptional = Optional.ofNullable(checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()));
+        Optional<CheckingAccount> checkingAccountOptional = Optional.ofNullable(checkingAccountRepository.findFirstCheckingAccountByOwner(investmentAccountOptional.get().getOwner()));
         if (checkingAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account #" + accountNumber + " not found");
 
         investmentAccountOptional.get().withdraw(amount);
@@ -63,7 +63,7 @@ public class InvestmentAccountService implements IInvestmentAccountService {
                 investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getBalance(),
                 amount.multiply(BigDecimal.valueOf(-1)),
                 investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner(),
-                checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner(),
+                checkingAccountRepository.findFirstCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner(),
                 userRepository.findByName(investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner()).getId(),
                 accountNumber
         );
@@ -72,9 +72,9 @@ public class InvestmentAccountService implements IInvestmentAccountService {
         transactionDataService.generateTransactionTicket(
                 checkingAccountRepository.findCheckingAccountByAccountNumber(checkingAccountOptional.get().getAccountNumber()).getBalance(),
                 amount,
-                checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner(),
+                checkingAccountRepository.findFirstCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner(),
                 investmentAccountRepository.findInvestmentAccountByAccountNumber(accountNumber).getOwner(),
-                userRepository.findByName(checkingAccountRepository.findCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner()).getId(),
+                userRepository.findByName(checkingAccountRepository.findFirstCheckingAccountByOwner(investmentAccountOptional.get().getOwner()).getOwner()).getId(),
                 checkingAccountOptional.get().getAccountNumber()
         );
     }

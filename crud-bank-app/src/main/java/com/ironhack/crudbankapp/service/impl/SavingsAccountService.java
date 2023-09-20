@@ -49,7 +49,7 @@ public class SavingsAccountService implements ISavingsAccountService {
     public void withdraw(Integer accountNumber, BigDecimal amount) {
         Optional<SavingsAccount> savingsAccountOptional = savingsAccountRepository.findById(accountNumber);
         if (savingsAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account #" + accountNumber + " not found");
-        Optional<CheckingAccount> checkingAccountOptional = Optional.ofNullable(checkingAccountRepository.findCheckingAccountByOwner(savingsAccountOptional.get().getOwner()));
+        Optional<CheckingAccount> checkingAccountOptional = Optional.ofNullable(checkingAccountRepository.findFirstCheckingAccountByOwner(savingsAccountOptional.get().getOwner()));
         if (checkingAccountOptional.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account #" + accountNumber + " not found");
 
         savingsAccountOptional.get().withdraw(amount);
@@ -60,7 +60,7 @@ public class SavingsAccountService implements ISavingsAccountService {
                 savingsAccountRepository.findSavingsAccountByAccountNumber(accountNumber).getBalance(),
                 amount.multiply(BigDecimal.valueOf(-1)),
                 savingsAccountRepository.findSavingsAccountByAccountNumber(accountNumber).getOwner(),
-                checkingAccountRepository.findCheckingAccountByOwner(checkingAccountOptional.get().getOwner()).getOwner(),
+                checkingAccountRepository.findFirstCheckingAccountByOwner(checkingAccountOptional.get().getOwner()).getOwner(),
                 userRepository.findByName(savingsAccountRepository.findSavingsAccountByAccountNumber(accountNumber).getOwner()).getId(),
                 accountNumber
         );
@@ -69,9 +69,9 @@ public class SavingsAccountService implements ISavingsAccountService {
         transactionDataService.generateTransactionTicket(
                 checkingAccountRepository.findCheckingAccountByAccountNumber(checkingAccountOptional.get().getAccountNumber()).getBalance(),
                 amount,
-                checkingAccountRepository.findCheckingAccountByOwner(savingsAccountOptional.get().getOwner()).getOwner(),
+                checkingAccountRepository.findFirstCheckingAccountByOwner(savingsAccountOptional.get().getOwner()).getOwner(),
                 savingsAccountRepository.findSavingsAccountByAccountNumber(accountNumber).getOwner(),
-                userRepository.findByName(checkingAccountRepository.findCheckingAccountByOwner(savingsAccountOptional.get().getOwner()).getOwner()).getId(),
+                userRepository.findByName(checkingAccountRepository.findFirstCheckingAccountByOwner(savingsAccountOptional.get().getOwner()).getOwner()).getId(),
                 checkingAccountOptional.get().getAccountNumber()
         );
     }

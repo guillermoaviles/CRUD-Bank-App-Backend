@@ -38,7 +38,7 @@ public class CheckingAccountController implements ICheckingAccountController {
 
     @GetMapping("/accounts/checking/owner/{owner}")
     public CheckingAccount getCheckingAccountByOwner(@PathVariable String owner) {
-        return checkingAccountRepository.findCheckingAccountByOwner(owner);
+        return checkingAccountRepository.findFirstCheckingAccountByOwner(owner);
     }
 
     // **************************************************  POST  ******************************************************
