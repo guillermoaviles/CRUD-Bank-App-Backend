@@ -16,6 +16,19 @@ To set up and run the project locally, follow these steps:
 1. Clone the repository.
 2. Configure your database settings in the `application.properties` file.
 3. Build and run the application using your preferred IDE or the command line.
+4. To run the app, first run the `discovery-service` instance.
+5. Open an Eureka local window at http://localhost:8761/ and make sure that it is running properly.
+6. Next, replace the user name in `CRUDBankApplication.java` in `crud-bank-app`.
+7. Run `crud-bank-app` and reload the Eureka window to see if the crud-bank-app instance appears.
+8. Run `transaction-data-service` and reload the Eureka window to see if the transaction-data-service instance appears.
+9. In order to experiment with fake funds, first create a user by clicking "Add Checking Account" on the frontend. Create as many accounts as you’d like.
+10. Next, add fake funds to an account by sending a PUT request to: http://localhost:8080/api/accounts/checking/{accountNumber}.
+11. You are now able to send funds to any checking, savings or investment accounts.
+
+Note: Investment accounts have a lockup time of 2 days per deposit. In order to unlock the funds before the 2 day period, modify the unlock date to sooner in a database administration tool like DBeaver.
+
+
+
 
 ## Technologies Used
 
